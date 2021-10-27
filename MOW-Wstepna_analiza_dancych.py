@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Zbiór danych
+# # 1. Zbiór danych
 # <p>
 # Zbiór danych dotyczący zdatności wody do picia. Zawiera 20 cech, które przedstawiają zawartość poszczególnych związków chemicznych, pierwiastków i mikroorganizmów oraz cechę określającą zdatność do spożycia.
 # </p>
@@ -24,7 +24,7 @@ data['ammonia'] = pd.to_numeric(data['ammonia'])
 data.head()
 
 
-# ## Statystyki opisowe i podsumowujące
+# # 2. Statystyki opisowe i podsumowujące
 
 # In[2]:
 
@@ -95,7 +95,7 @@ plt.show()
 
 # #### Odfiltrowanie wartości odstających
 
-# In[10]:
+# In[9]:
 
 
 filtered = data[data['viruses']>0.1]
@@ -105,10 +105,28 @@ plt.show()
 filtered[['viruses', 'bacteria']].boxplot()
 
 
-# In[11]:
+# In[10]:
 
 
 filtered.info()
+
+
+# # 3. Skalowanie cech
+
+# In[14]:
+
+
+from sklearn import preprocessing
+
+scaler = preprocessing.StandardScaler().fit(data[['aluminium', 'ammonia', 'arsenic', 'barium', 'cadmium', 'chloramine', 'chromium', 'copper', 'flouride', 'bacteria', 'viruses', 'lead', 'nitrates', 'nitrites', 'mercury', 'perchlorate', 'radium', 'selenium', 'silver', 'uranium']])
+data_scaled = scaler.transform(data[['aluminium', 'ammonia', 'arsenic', 'barium', 'cadmium', 'chloramine', 'chromium', 'copper', 'flouride', 'bacteria', 'viruses', 'lead', 'nitrates', 'nitrites', 'mercury', 'perchlorate', 'radium', 'selenium', 'silver', 'uranium']])
+
+data_scaled = pd.DataFrame(np.append(data_scaled, data[['is_safe']].to_numpy(), axis=1), dtype=float)
+data_scaled.columns = data.columns
+
+data_scaled.boxplot(figsize=(30, 9))
+plt.show()
+data_scaled.describe()
 
 
 # In[ ]:
